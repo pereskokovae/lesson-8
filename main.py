@@ -1,12 +1,11 @@
 import json
-import requests
-from geopy import distance
 import folium
+import requests
+import os
+from geopy import distance
 
 
 def fetch_coordinates(apikey, user_address):
-
-
     base_url = "https://geocode-maps.yandex.ru/1.x"
     response = requests.get(base_url, params={
         "geocode": user_address,
@@ -21,7 +20,7 @@ def fetch_coordinates(apikey, user_address):
 
     most_relevant = found_places[0] 
     lon, lat = most_relevant['GeoObject']['Point']['pos'].split(" ")
-    return float(lat), float(lon)  
+    return float(lat), float(lon)
 
 
 def calculate_distance(user_coords, coffee_coords):
@@ -43,12 +42,10 @@ def sorter(coffee_list, user_coords, count=5):
 
 
 def main():
-    apikey = 'e6bbc52a-5438-4f49-bca7-15a6777ce294'
+    apikey = os.getenv('APIKEY')
     user_address = input('Где вы находитесь? ')
 
-
     user_coords = fetch_coordinates(apikey, user_address)
-    print(f'Ваши координаты: {user_coords}')
 
 
     with open("coffee.json", "r", encoding="CP1251") as coffee_json:
@@ -65,23 +62,15 @@ def main():
 
     sorted_coffees = sorter(coffee_list, user_coords, count=5)
 
-
-    for coffee in sorted_coffees:
-        print(f'Ближайшиe кофейни: {coffee['coffee_name']}')
-
-    
-
     m = folium.Map(location=user_coords, zoom_start=12)
-
 
     for coffee in sorted_coffees:
         folium.Marker(
-            location=[coffee['latitude'], coffee['longitude']],  
-            popup=coffee['coffee_name'],  
+            location=[coffee['latitude'], coffee['longitude']],
+            popup=coffee['coffee_name'],
             icon=folium.Icon(icon="coffee"),
         ).add_to(m)
 
-   
     m.save("index.html")
 
 
