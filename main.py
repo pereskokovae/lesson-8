@@ -51,8 +51,6 @@ def main():
     user_address = input('Где вы находитесь? ')
 
     user_coords = fetch_coordinates(apikey, user_address)
-
-
     with open("coffee.json", "r", encoding="CP1251") as coffee_json:
         file_contents = json.load(coffee_json)
         coffee_list = [] 
@@ -63,19 +61,14 @@ def main():
                 'longitude': coffee_file['geoData']['coordinates'][0]  
             }
             coffee_list.append(coffee_coords)
-
-
     sorted_coffees = sorter(coffee_list, user_coords, count=5)
-
     m = folium.Map(location=user_coords, zoom_start=12)
-
     for coffee in sorted_coffees:
         folium.Marker(
             location=[coffee['latitude'], coffee['longitude']],
             popup=coffee['coffee_name'],
             icon=folium.Icon(icon="coffee"),
         ).add_to(m)
-
     m.save("index.html")
 
 
