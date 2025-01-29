@@ -3,6 +3,10 @@ import folium
 import requests
 import os
 from geopy import distance
+from dotenv import load_dotenv  
+
+
+load_dotenv()
 
 
 def fetch_coordinates(apikey, user_address):
