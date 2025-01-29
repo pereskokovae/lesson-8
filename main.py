@@ -6,8 +6,6 @@ from geopy import distance
 from dotenv import load_dotenv
 
 
-load_dotenv()
-
 
 def fetch_coordinates(apikey, user_address):
     base_url = "https://geocode-maps.yandex.ru/1.x"
@@ -46,6 +44,9 @@ def sorter(coffee_list, user_coords, count=5):
 
 
 def main():
+    load_dotenv()
+
+
     apikey = os.getenv('APIKEY')
     user_address = input('Где вы находитесь? ')
 
